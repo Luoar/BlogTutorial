@@ -143,17 +143,12 @@ public class BlogResource {
     /**
      * {@code GET  /blogs} : get all the blogs.
      *
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of blogs in body.
      */
     @GetMapping("/blogs")
-    public List<Blog> getAllBlogs(@RequestParam(required = false, defaultValue = "false") boolean eagerload) {
+    public List<Blog> getAllBlogs() {
         log.debug("REST request to get all Blogs");
-        if (eagerload) {
-            return blogRepository.findAllWithEagerRelationships();
-        } else {
-            return blogRepository.findAll();
-        }
+        return blogRepository.findByUserIsCurrentUser();
     }
 
     /**

@@ -2,6 +2,7 @@ package ch.luoar.blogtutorial.web.rest;
 
 import ch.luoar.blogtutorial.domain.Post;
 import ch.luoar.blogtutorial.repository.PostRepository;
+import ch.luoar.blogtutorial.security.SecurityUtils;
 import ch.luoar.blogtutorial.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -153,21 +154,12 @@ public class PostResource {
      * {@code GET  /posts} : get all the posts.
      *
      * @param pageable the pagination information.
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of posts in body.
      */
     @GetMapping("/posts")
-    public ResponseEntity<List<Post>> getAllPosts(
-        @org.springdoc.api.annotations.ParameterObject Pageable pageable,
-        @RequestParam(required = false, defaultValue = "false") boolean eagerload
-    ) {
+    public ResponseEntity<List<Post>> getAllPosts(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
         log.debug("REST request to get a page of Posts");
-        Page<Post> page;
-        if (eagerload) {
-            page = postRepository.findAllWithEagerRelationships(pageable);
-        } else {
-            page = postRepository.findAll(pageable);
-        }
+        Page<Post> page = postRepository.findByBlogUserLoginOrderByDateDesc(SecurityUtils.getCurrentUserLogin().orElse(null), pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
