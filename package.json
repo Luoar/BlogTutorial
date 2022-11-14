@@ -39,7 +39,7 @@
     "predocker:others:up": "",
     "docker:others:up": "",
     "e2e": "npm run e2e:cypress:headed --",
-    "e2e:cypress": "cypress run --e2e --browser chrome --record ${CYPRESS_ENABLE_RECORD:-false}",
+    "e2e:cypress": "cypress run --e2e --browser chrome --record false",
     "pree2e:cypress:coverage": "npm run clean coverage && npm run ci:server:await",
     "e2e:cypress:coverage": "npm run e2e:cypress:headed",
     "poste2e:cypress:coverage": "nyc report",
@@ -83,7 +83,7 @@
     "webapp:test": "npm run test --"
   },
   "config": {
-    "backend_port": "8080",
+    "backend_port": "8100",
     "default_environment": "prod",
     "packaging": "jar"
   },
